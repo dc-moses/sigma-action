@@ -18478,6 +18478,7 @@ function run() {
             (0, core_1.info)(`ERROR: Could not execute Sigma!`);
             (0, core_1.setFailed)(`Could not execute ${sigma_manager_1.TOOL_NAME} ${sigma_manager_1.SIGMA_VERSION}: ${reason}`);
         });
+        (0, core_1.info)(`Sigma exit code=` + sigmaExitCode);
         // Release this eventualy
         if (!sigmaExitCode) {
             (0, core_1.info)(`INFO: !sigmaExitCode, cancelling policy check. Code is ` + sigmaExitCode);
@@ -18640,14 +18641,6 @@ function findOrDownloadSigma() {
         (0, core_1.info)(`cacheFolder=` + cacheFolder + ` binaryName=` + binaryName);
         yield fs.chmod(cacheFolder + "/" + binaryName, 0o555, function () { });
         return (path_1.default.resolve(cacheFolder, binaryName));
-        /*
-        return (
-          downloadTool(sigmaDownloadUrl)
-            .then(sigmaDownloadPath => cacheFile(sigmaDownloadPath, binaryName, TOOL_NAME, SIGMA_VERSION))
-            //TODO: Jarsigner?
-            .then(cachedFolder => path.resolve(cachedFolder, binaryName))
-        )
-        */
     });
 }
 exports.findOrDownloadSigma = findOrDownloadSigma;
@@ -18656,11 +18649,6 @@ function runSigma(sigmaPath, sigmaArgs) {
         (0, core_1.info)(`Will execute java with ` + sigmaPath);
         // TODO How to run these safely in sequence sp the return from exec passes though?
         return (0, exec_1.exec)(sigmaPath, sigmaArgs, { ignoreReturnCode: true });
-        /*
-          return fs.chmod(sigmaPath, 0o555, () => {
-            return exec(sigmaPath, sigmaArgs, {ignoreReturnCode: true})
-            });
-        */
     });
 }
 exports.runSigma = runSigma;
