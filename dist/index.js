@@ -18462,7 +18462,8 @@ function run() {
           outputPath = path.resolve(runnerTemp, 'sigma')
         }
         */
-        const sigmaArgs = ['analyze', '--format', 'github', '.'];
+        //const sigmaArgs = ['analyze', '--format', 'github', '.']
+        const sigmaArgs = ['analyze', '.'];
         (0, core_1.info)(`INFO: Downloading sigma...`);
         const sigmaPath = yield (0, sigma_manager_1.findOrDownloadSigma)().catch(reason => {
             (0, core_1.setFailed)(`Could not download ${sigma_manager_1.TOOL_NAME} ${sigma_manager_1.SIGMA_VERSION}: ${reason}`);
