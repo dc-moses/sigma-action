@@ -18492,6 +18492,10 @@ function run() {
         var obj = JSON.parse(rawdata.toString());
         const revision = obj['revision'];
         (0, core_1.info)(`JSON Revision: ` + revision);
+        for (var i = 0, len = obj["issues"]["issues"].length; i < len; ++i) {
+            var issue = obj["issues"]["issues"][i];
+            (0, core_1.info)(`JSON Checker: ` + issue['checker_id']);
+        }
         /*
         {
         "revision": "1.0.1",
