@@ -18519,17 +18519,13 @@ function run() {
                     key: pull_files["data"][i]["filename"],
                     value: 1
                 });
-                //files_in_pr[pull_files["data"][i]["filename"]] = 1
+            }
+            // Loop through findings and leave comments on lines
+            for (var j = 0, len2 = obj["issues"]["issues"].length; j < len2; ++j) {
+                var issue = obj["issues"]["issues"][i];
+                (0, core_1.info)(`Create PR comment on uuid=` + issue['uuid'] + " Checker: " + issue['checker_id'] + " Filepath: " + issue['filepath'] + " Line: " + issue['location']['start']['line']);
             }
             /*
-                // Loop through findings and leave comments on lines
-                for (var i = 0, len = obj["issues"]["issues"].length; i < len; ++i) {
-                  var issue = obj["issues"]["issues"][i];
-                  info(`Create PR comment`)
-                  info(`JSON Checker: ` + issue['checker_id'])
-                  info(`Filepath: ` + issue['filepath'])
-                  info(`line: ` + issue['location']['start']['line'])
-            
                   if (files_in_pr[issue['filepath']] == 1) {
                     const sha = getSha()
                     var comment = await octokit.rest.pulls.createReviewComment({
@@ -18545,7 +18541,6 @@ function run() {
                     info(JSON.stringify(comment, null, 2))
                   }
                 }
-            
             */
             /*
                 const pull_files = octokit.rest.pulls.listFiles({
