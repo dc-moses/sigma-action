@@ -18499,6 +18499,18 @@ function run() {
             const contextOwner = github_1.context.repo.owner;
             const contextRepo = github_1.context.repo.repo;
             (0, core_1.info)("Number: " + contextIssue + " Owner: " + contextOwner + " Repo: " + contextRepo);
+            octokit.rest.issues.createComment({
+                issue_number: contextIssue,
+                owner: contextOwner,
+                repo: contextRepo,
+                body: "Test from Sigma integration"
+            });
+            var pull_files = yield octokit.rest.pulls.listFiles({
+                owner: contextOwner,
+                repo: contextRepo,
+                pull_number: contextIssue
+            });
+            (0, core_1.info)(JSON.stringify(pull_files, null, 2));
             /*
                 const pull_files = octokit.rest.pulls.listFiles({
                 owner: contextOwner,
