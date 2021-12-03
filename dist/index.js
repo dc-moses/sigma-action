@@ -18552,11 +18552,13 @@ function run() {
         for (var i = 0, len = obj["issues"]["issues"].length; i < len; ++i) {
             var issue = obj["issues"]["issues"][i];
             (0, core_1.info)(`JSON Checker: ` + issue['checker_id']);
-            // summary
-            // desc
-            // remediation
-            // fixes -> actions -> location -> statr -> line
+            (0, core_1.info)(`Filepath: ` + issue['filepath']);
+            (0, core_1.info)(`line: ` + issue['location']['start']['line']);
         }
+        // summary
+        // desc
+        // remediation
+        // fixes -> actions -> location -> statr -> line
         /*
         {
         "revision": "1.0.1",
