@@ -23273,8 +23273,9 @@ exports.findOrDownloadDetect = findOrDownloadDetect;
 function runDetect(detectPath, detectArguments) {
     return __awaiter(this, void 0, void 0, function* () {
         (0, core_1.info)(`Will ecxecute java with ` + detectPath);
-        yield fs.chmodSync(detectPath, 555);
-        return (0, exec_1.exec)(`java`, ['-jar', detectPath].concat(detectArguments), { ignoreReturnCode: true });
+        return fs.chmod(detectPath, 0o555, () => {
+            return (0, exec_1.exec)(`java`, ['-jar', detectPath].concat(detectArguments), { ignoreReturnCode: true });
+        });
     });
 }
 exports.runDetect = runDetect;
