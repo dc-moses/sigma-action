@@ -18517,6 +18517,7 @@ function run() {
                     owner: contextOwner,
                     repo: contextRepo,
                     pull_number: contextIssue,
+                    path: issue['filepath'],
                     body: "Sigma finding: " + issue['summary'],
                     line: issue['location']['start']['line']
                 });
