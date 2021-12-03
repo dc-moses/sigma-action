@@ -18381,6 +18381,61 @@ exports.finishSigmaPolicyCheck = finishSigmaPolicyCheck;
 
 /***/ }),
 
+/***/ 5001:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.commentOnPR = void 0;
+const github_1 = __nccwpck_require__(3134);
+const inputs_1 = __nccwpck_require__(2074);
+const COMMENT_PREFACE = '<!-- Comment automatically managed by Sigma Action, do not remove this line -->';
+function commentOnPR(report) {
+    var _a;
+    return __awaiter(this, void 0, void 0, function* () {
+        const octokit = (0, github_1.getOctokit)(inputs_1.GITHUB_TOKEN);
+        const message = COMMENT_PREFACE.concat('\r\n', report);
+        const contextIssue = github_1.context.issue.number;
+        const contextOwner = github_1.context.repo.owner;
+        const contextRepo = github_1.context.repo.repo;
+        const { data: existingComments } = yield octokit.rest.issues.listComments({
+            issue_number: contextIssue,
+            owner: contextOwner,
+            repo: contextRepo
+        });
+        for (const comment of existingComments) {
+            const firstLine = (_a = comment.body) === null || _a === void 0 ? void 0 : _a.split('\r\n')[0];
+            if (firstLine === COMMENT_PREFACE) {
+                octokit.rest.issues.deleteComment({
+                    comment_id: comment.id,
+                    owner: contextOwner,
+                    repo: contextRepo
+                });
+            }
+        }
+        octokit.rest.issues.createComment({
+            issue_number: contextIssue,
+            owner: contextOwner,
+            repo: contextRepo,
+            body: message
+        });
+    });
+}
+exports.commentOnPR = commentOnPR;
+
+
+/***/ }),
+
 /***/ 1723:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
@@ -18446,6 +18501,8 @@ const core_1 = __nccwpck_require__(5127);
 const fs_1 = __importDefault(__nccwpck_require__(7147));
 const upload_artifacts_1 = __nccwpck_require__(6924);
 const sigma_manager_1 = __nccwpck_require__(3341);
+const comment_1 = __nccwpck_require__(5001);
+const github_context_1 = __nccwpck_require__(1723);
 const check_1 = __nccwpck_require__(5959);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -18476,8 +18533,6 @@ function run() {
             (0, core_1.info)(`ERROR: Could not execute Sigma!`);
             (0, core_1.setFailed)(`Could not execute ${sigma_manager_1.TOOL_NAME} ${sigma_manager_1.SIGMA_VERSION}: ${reason}`);
         });
-        (0, core_1.info)(`Sigma exit code=` + sigmaExitCode);
-        // Release this eventualy
         /*
           if (!sigmaExitCode) {
             info(`INFO: !sigmaExitCode, cancelling policy check. Code is ` + sigmaExitCode)
@@ -18488,13 +18543,19 @@ function run() {
         const scanJsonPath = "sigma-results.json";
         (0, upload_artifacts_1.uploadRapidScanJson)('./', [scanJsonPath]);
         const rawdata = fs_1.default.readFileSync(scanJsonPath);
-        //const scanJson = JSON.parse(rawdata.toString()) as PolicyViolation[]
         var obj = JSON.parse(rawdata.toString());
-        const revision = obj['revision'];
-        (0, core_1.info)(`JSON Revision: ` + revision);
+        // If we are running as part of a PR, then leave an individual comment on each line.
+        if ((0, github_context_1.isPullRequest)()) {
+            (0, core_1.info)(`INFO: Running on a pull request`);
+            (0, comment_1.commentOnPR)("");
+        }
         for (var i = 0, len = obj["issues"]["issues"].length; i < len; ++i) {
             var issue = obj["issues"]["issues"][i];
             (0, core_1.info)(`JSON Checker: ` + issue['checker_id']);
+            // summary
+            // desc
+            // remediation
+            // fixes -> actions -> location -> statr -> line
         }
         /*
         {
