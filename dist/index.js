@@ -18515,16 +18515,12 @@ function run() {
             var files_in_pr = [];
             for (var i = 0, len = pull_files["data"].length; i < len; ++i) {
                 (0, core_1.info)("Filename seen in PR: " + pull_files["data"][i]["filename"]);
-                files_in_pr.push({
-                    key: pull_files["data"][i]["filename"],
-                    value: true
-                });
+                files_in_pr.push(pull_files["data"][i]["filename"]);
             }
             // Loop through findings and leave comments on lines
             for (var j = 0, len2 = obj["issues"]["issues"].length; j < len2; ++j) {
                 var issue = obj["issues"]["issues"][j];
-                //if (issue['filepath'] in files_in_pr) {
-                if (true) {
+                if (files_in_pr.includes(issue['filepath'])) {
                     (0, core_1.info)(`Create PR comment on uuid=` + issue['uuid'] + " Checker: " + issue['checker_id'] + " Filepath: " + issue['filepath'] + " Line: " + issue['location']['start']['line']);
                 }
             }
