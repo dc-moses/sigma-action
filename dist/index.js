@@ -18499,12 +18499,14 @@ function run() {
             const contextOwner = github_1.context.repo.owner;
             const contextRepo = github_1.context.repo.repo;
             (0, core_1.info)("Number: " + contextIssue + " Owner: " + contextOwner + " Repo: " + contextRepo);
-            octokit.rest.issues.createComment({
+            // Leave a note in the overlal PR
+            yield octokit.rest.issues.createComment({
                 issue_number: contextIssue,
                 owner: contextOwner,
                 repo: contextRepo,
                 body: "Test from Sigma integration"
             });
+            // Get a list of files in the current PR so we only comment on those
             var pull_files = yield octokit.rest.pulls.listFiles({
                 owner: contextOwner,
                 repo: contextRepo,
@@ -18513,8 +18515,35 @@ function run() {
             var files_in_pr = {};
             for (var i = 0, len = pull_files["data"].length; i < len; ++i) {
                 (0, core_1.info)("filename: " + pull_files["data"][i]["filename"]);
+                //pr_filename = pull_files["data"][i]["filename"]
+                //files_in_pr[pull_files["data"][i]["filename"]] = 1
             }
-            (0, core_1.info)(JSON.stringify(pull_files, null, 2));
+            /*
+                // Loop through findings and leave comments on lines
+                for (var i = 0, len = obj["issues"]["issues"].length; i < len; ++i) {
+                  var issue = obj["issues"]["issues"][i];
+                  info(`Create PR comment`)
+                  info(`JSON Checker: ` + issue['checker_id'])
+                  info(`Filepath: ` + issue['filepath'])
+                  info(`line: ` + issue['location']['start']['line'])
+            
+                  if (files_in_pr[issue['filepath']] == 1) {
+                    const sha = getSha()
+                    var comment = await octokit.rest.pulls.createReviewComment({
+                        owner: contextOwner,
+                        repo: contextRepo,
+                        pull_number: contextIssue,
+                        path: issue['filepath'],
+                        commit_id: sha,
+                        body: "Sigma finding: " + issue['summary'],
+                        line: issue['location']['start']['line']
+                    });
+            
+                    info(JSON.stringify(comment, null, 2))
+                  }
+                }
+            
+            */
             /*
                 const pull_files = octokit.rest.pulls.listFiles({
                 owner: contextOwner,
