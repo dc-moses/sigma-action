@@ -18513,11 +18513,13 @@ function run() {
                 (0, core_1.info)(`JSON Checker: ` + issue['checker_id']);
                 (0, core_1.info)(`Filepath: ` + issue['filepath']);
                 (0, core_1.info)(`line: ` + issue['location']['start']['line']);
+                const sha = (0, github_context_1.getSha)();
                 octokit.rest.pulls.createReviewComment({
                     owner: contextOwner,
                     repo: contextRepo,
                     pull_number: contextIssue,
                     path: issue['filepath'],
+                    commit_id: sha,
                     body: "Sigma finding: " + issue['summary'],
                     line: issue['location']['start']['line']
                 });
