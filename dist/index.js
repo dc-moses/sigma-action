@@ -18514,6 +18514,7 @@ function run() {
             });
             var files_in_pr = [];
             for (var i = 0, len = pull_files["data"].length; i < len; ++i) {
+                (0, core_1.info)(JSON.stringify(pull_files["data"][i], null, 2));
                 (0, core_1.info)("Filename seen in PR: " + pull_files["data"][i]["filename"]);
                 files_in_pr.push(pull_files["data"][i]["filename"]);
             }
