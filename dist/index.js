@@ -18461,7 +18461,6 @@ function run() {
           outputPath = path.resolve(runnerTemp, 'sigma')
         }
         */
-        //const sigmaArgs = ['analyze', '--format', 'github', '.']
         const sigmaArgs = ['analyze', '.'];
         (0, core_1.info)(`INFO: Downloading sigma...`);
         const sigmaPath = yield (0, sigma_manager_1.findOrDownloadSigma)().catch(reason => {
@@ -18479,11 +18478,13 @@ function run() {
         });
         (0, core_1.info)(`Sigma exit code=` + sigmaExitCode);
         // Release this eventualy
-        if (!sigmaExitCode) {
-            (0, core_1.info)(`INFO: !sigmaExitCode, cancelling policy check. Code is ` + sigmaExitCode);
-            (0, check_1.cancelSigmaPolicyCheck)(policyCheckId);
-            return;
-        }
+        /*
+          if (!sigmaExitCode) {
+            info(`INFO: !sigmaExitCode, cancelling policy check. Code is ` + sigmaExitCode)
+            cancelSigmaPolicyCheck(policyCheckId)
+            return
+          }
+        */
         const scanJsonPath = "sigma-results.json";
         (0, upload_artifacts_1.uploadRapidScanJson)('./', [scanJsonPath]);
         const rawdata = fs_1.default.readFileSync(scanJsonPath);
