@@ -18498,12 +18498,16 @@ function run() {
             const contextIssue = github_1.context.issue.number;
             const contextOwner = github_1.context.repo.owner;
             const contextRepo = github_1.context.repo.repo;
-            const pull_files = octokit.rest.pulls.listFiles({
+            (0, core_1.info)("Number: " + contextIssue + " Owner: " + contextOwner + " Repo: " + contextRepo);
+            /*
+                const pull_files = octokit.rest.pulls.listFiles({
                 owner: contextOwner,
                 repo: contextRepo,
                 pull_number: contextIssue
-            });
-            (0, core_1.info)(JSON.stringify(pull_files, null, 2));
+                })
+            
+                info(JSON.stringify(pull_files, null, 2))
+                */
             /*
             octokit.rest.issues.createComment({
               issue_number: contextIssue,
@@ -18513,23 +18517,26 @@ function run() {
             })
             */
             // Loop through findings and leave comments on lines
+            /*
             for (var i = 0, len = obj["issues"]["issues"].length; i < len; ++i) {
-                var issue = obj["issues"]["issues"][i];
-                (0, core_1.info)(`Create PR comment`);
-                (0, core_1.info)(`JSON Checker: ` + issue['checker_id']);
-                (0, core_1.info)(`Filepath: ` + issue['filepath']);
-                (0, core_1.info)(`line: ` + issue['location']['start']['line']);
-                const sha = (0, github_context_1.getSha)();
-                octokit.rest.pulls.createReviewComment({
-                    owner: contextOwner,
-                    repo: contextRepo,
-                    pull_number: contextIssue,
-                    path: issue['filepath'],
-                    commit_id: sha,
-                    body: "Sigma finding: " + issue['summary'],
-                    line: issue['location']['start']['line']
+              var issue = obj["issues"]["issues"][i];
+              info(`Create PR comment`)
+              info(`JSON Checker: ` + issue['checker_id'])
+              info(`Filepath: ` + issue['filepath'])
+              info(`line: ` + issue['location']['start']['line'])
+        
+              const sha = getSha()
+              octokit.rest.pulls.createReviewComment({
+                owner: contextOwner,
+                repo: contextRepo,
+                pull_number: contextIssue,
+                path: issue['filepath'],
+                commit_id: sha,
+                body: "Sigma finding: " + issue['summary'],
+                line: issue['location']['start']['line']
                 });
             }
+        */
         }
         /*
           for (var i = 0, len = obj["issues"]["issues"].length; i < len; ++i) {
