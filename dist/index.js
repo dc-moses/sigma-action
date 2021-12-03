@@ -18478,17 +18478,22 @@ function run() {
             (0, core_1.info)(`ERROR: Could not execute Sigma!`);
             (0, core_1.setFailed)(`Could not execute ${sigma_manager_1.TOOL_NAME} ${sigma_manager_1.SIGMA_VERSION}: ${reason}`);
         });
-        /*
+        // Release this eventualy
         if (!sigmaExitCode) {
-          info(`INFO: !sigmaExitCode, cancelling policy check. Code is ` + sigmaExitCode)
-          cancelSigmaPolicyCheck(policyCheckId)
-          return
+            (0, core_1.info)(`INFO: !sigmaExitCode, cancelling policy check. Code is ` + sigmaExitCode);
+            (0, check_1.cancelSigmaPolicyCheck)(policyCheckId);
+            return;
         }
-        */
         const scanJsonPath = "sigma-results.json";
         (0, upload_artifacts_1.uploadRapidScanJson)('./', [scanJsonPath]);
         const rawdata = fs_1.default.readFileSync(scanJsonPath);
         const scanJson = JSON.parse(rawdata.toString());
+        /*
+        info(`*********** Got JsonParse data`)
+        const revision = scanJson.revision
+        info('**** created is ****')
+        info(`*********** Done with JsonParse data`)
+        */
         const rapidScanReport = yield (0, rapid_scan_1.createReport)(scanJson);
         if (scanJson.length === 0) {
             (0, check_1.passSigmaPolicyCheck)(policyCheckId, rapidScanReport);
@@ -18629,16 +18634,25 @@ function findOrDownloadSigma() {
         }
         const sigmaDownloadUrl = createSigmaDownloadUrl(SIGMA_BINARY_REPO_URL, binaryName);
         (0, core_1.info)(`Downloading: ` + sigmaDownloadUrl);
-        return ((0, tool_cache_1.downloadTool)(sigmaDownloadUrl)
-            .then(sigmaDownloadPath => (0, tool_cache_1.cacheFile)(sigmaDownloadPath, binaryName, exports.TOOL_NAME, exports.SIGMA_VERSION))
+        const sigmaDownloadPath = yield (0, tool_cache_1.downloadTool)(sigmaDownloadUrl);
+        const cacheFolder = yield (0, tool_cache_1.cacheFile)(sigmaDownloadPath, binaryName, exports.TOOL_NAME, exports.SIGMA_VERSION);
+        (0, core_1.info)(`Donwloaded: ` + sigmaDownloadUrl + ` to ` + sigmaDownloadPath + ` in: ` + cacheFolder);
+        return (path_1.default.resolve(cacheFolder, binaryName));
+        /*
+        return (
+          downloadTool(sigmaDownloadUrl)
+            .then(sigmaDownloadPath => cacheFile(sigmaDownloadPath, binaryName, TOOL_NAME, SIGMA_VERSION))
             //TODO: Jarsigner?
-            .then(cachedFolder => path_1.default.resolve(cachedFolder, binaryName)));
+            .then(cachedFolder => path.resolve(cachedFolder, binaryName))
+        )
+        */
     });
 }
 exports.findOrDownloadSigma = findOrDownloadSigma;
 function runSigma(sigmaPath, sigmaArgs) {
     return __awaiter(this, void 0, void 0, function* () {
         (0, core_1.info)(`Will execute java with ` + sigmaPath);
+        // TODO How to run these safely in sequence sp the return from exec passes though?
         return fs.chmod(sigmaPath, 0o555, () => {
             return (0, exec_1.exec)(sigmaPath, sigmaArgs, { ignoreReturnCode: true });
         });
