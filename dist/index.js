@@ -18638,6 +18638,7 @@ function findOrDownloadSigma() {
         const cacheFolder = yield (0, tool_cache_1.cacheFile)(sigmaDownloadPath, binaryName, exports.TOOL_NAME, exports.SIGMA_VERSION);
         (0, core_1.info)(`Donwloaded: ` + sigmaDownloadUrl + ` to ` + sigmaDownloadPath + ` in: ` + cacheFolder);
         (0, core_1.info)(`cacheFolder=` + cacheFolder + ` binaryName=` + binaryName);
+        yield fs.chmod(cacheFolder + "/" + binaryName, 0o555);
         return (path_1.default.resolve(cacheFolder, binaryName));
         /*
         return (
