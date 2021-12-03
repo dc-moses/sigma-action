@@ -18498,7 +18498,11 @@ function run() {
             const contextIssue = github_1.context.issue.number;
             const contextOwner = github_1.context.repo.owner;
             const contextRepo = github_1.context.repo.repo;
-            const pull_files = octokit.rest.pulls.listFiles();
+            const pull_files = octokit.rest.pulls.listFiles({
+                owner: contextOwner,
+                repo: contextRepo,
+                pull_number: contextIssue
+            });
             (0, core_1.info)(JSON.stringify(pull_files, null, 2));
             /*
             octokit.rest.issues.createComment({
