@@ -18478,16 +18478,24 @@ function run() {
             (0, core_1.info)(`ERROR: Could not execute Sigma!`);
             (0, core_1.setFailed)(`Could not execute ${sigma_manager_1.TOOL_NAME} ${sigma_manager_1.SIGMA_VERSION}: ${reason}`);
         });
+        /*
         if (!sigmaExitCode) {
-            (0, core_1.info)(`INFO: !sigmaExitCode, cancelling policy check. Code is ` + sigmaExitCode);
-            (0, check_1.cancelSigmaPolicyCheck)(policyCheckId);
-            return;
+          info(`INFO: !sigmaExitCode, cancelling policy check. Code is ` + sigmaExitCode)
+          cancelSigmaPolicyCheck(policyCheckId)
+          return
         }
+        */
         const scanJsonPath = "sigma-results.json";
         (0, upload_artifacts_1.uploadRapidScanJson)('./', [scanJsonPath]);
         const rawdata = fs_1.default.readFileSync(scanJsonPath);
         const scanJson = JSON.parse(rawdata.toString());
         const rapidScanReport = yield (0, rapid_scan_1.createReport)(scanJson);
+        if (scanJson.length === 0) {
+            (0, check_1.passSigmaPolicyCheck)(policyCheckId, rapidScanReport);
+        }
+        else {
+            (0, check_1.failSigmaPolicyCheck)(policyCheckId, rapidScanReport);
+        }
         // Parse sigma output and comment on PR
         /*
         if (SCAN_MODE === 'RAPID') {
