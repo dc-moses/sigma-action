@@ -23254,6 +23254,7 @@ const path_1 = __importDefault(__nccwpck_require__(1017));
 const inputs_1 = __nccwpck_require__(2074);
 const DETECT_BINARY_REPO_URL = 'https://sig-repo.synopsys.com';
 exports.TOOL_NAME = 'detect';
+const fs = __nccwpck_require__(7147);
 function findOrDownloadDetect() {
     return __awaiter(this, void 0, void 0, function* () {
         const jarName = `synopsys-detect-${inputs_1.DETECT_VERSION}.jar`;
@@ -23272,8 +23273,7 @@ exports.findOrDownloadDetect = findOrDownloadDetect;
 function runDetect(detectPath, detectArguments) {
     return __awaiter(this, void 0, void 0, function* () {
         (0, core_1.info)(`Will ecxecute java with ` + detectPath);
-        const fs = __nccwpck_require__(7147);
-        fs.chmodSync(detectPath, 555);
+        yield fs.chmodSync(detectPath, 555);
         return (0, exec_1.exec)(`java`, ['-jar', detectPath].concat(detectArguments), { ignoreReturnCode: true });
     });
 }
