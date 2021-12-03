@@ -18655,9 +18655,12 @@ function runSigma(sigmaPath, sigmaArgs) {
     return __awaiter(this, void 0, void 0, function* () {
         (0, core_1.info)(`Will execute java with ` + sigmaPath);
         // TODO How to run these safely in sequence sp the return from exec passes though?
-        return fs.chmod(sigmaPath, 0o555, () => {
-            return (0, exec_1.exec)(sigmaPath, sigmaArgs, { ignoreReturnCode: true });
-        });
+        return (0, exec_1.exec)(sigmaPath, sigmaArgs, { ignoreReturnCode: true });
+        /*
+          return fs.chmod(sigmaPath, 0o555, () => {
+            return exec(sigmaPath, sigmaArgs, {ignoreReturnCode: true})
+            });
+        */
     });
 }
 exports.runSigma = runSigma;
