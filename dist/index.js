@@ -18512,10 +18512,13 @@ function run() {
                 repo: contextRepo,
                 pull_number: contextIssue
             });
-            var files_in_pr = {};
+            var files_in_pr = [];
             for (var i = 0, len = pull_files["data"].length; i < len; ++i) {
                 (0, core_1.info)("filename: " + pull_files["data"][i]["filename"]);
-                //pr_filename = pull_files["data"][i]["filename"]
+                files_in_pr.push({
+                    key: pull_files["data"][i]["filename"],
+                    value: 1
+                });
                 //files_in_pr[pull_files["data"][i]["filename"]] = 1
             }
             /*
