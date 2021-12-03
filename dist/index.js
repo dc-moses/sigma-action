@@ -18510,6 +18510,10 @@ function run() {
                 repo: contextRepo,
                 pull_number: contextIssue
             });
+            var files_in_pr = {};
+            for (var i = 0, len = pull_files["data"].length; i < len; ++i) {
+                (0, core_1.info)("filename: " + pull_files["data"][i]["filename"]);
+            }
             (0, core_1.info)(JSON.stringify(pull_files, null, 2));
             /*
                 const pull_files = octokit.rest.pulls.listFiles({
