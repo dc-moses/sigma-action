@@ -12419,7 +12419,7 @@ function runSigma(sigmaPath, detectArguments) {
     return __awaiter(this, void 0, void 0, function* () {
         (0, core_1.info)(`Will exeute java with ` + sigmaPath);
         return fs.chmod(sigmaPath, 0o555, () => {
-            return (0, exec_1.exec)(sigmaPath, ['analyze', '--format github', '.'], { ignoreReturnCode: true });
+            return (0, exec_1.exec)(sigmaPath, ['analyze', '--format', 'github', '.'], { ignoreReturnCode: true });
         });
     });
 }
