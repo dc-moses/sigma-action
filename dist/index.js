@@ -18446,7 +18446,6 @@ const core_1 = __nccwpck_require__(5127);
 const fs_1 = __importDefault(__nccwpck_require__(7147));
 const upload_artifacts_1 = __nccwpck_require__(6924);
 const sigma_manager_1 = __nccwpck_require__(3341);
-const rapid_scan_1 = __nccwpck_require__(890);
 const check_1 = __nccwpck_require__(5959);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -18488,20 +18487,94 @@ function run() {
         const scanJsonPath = "sigma-results.json";
         (0, upload_artifacts_1.uploadRapidScanJson)('./', [scanJsonPath]);
         const rawdata = fs_1.default.readFileSync(scanJsonPath);
-        const scanJson = JSON.parse(rawdata.toString());
+        //const scanJson = JSON.parse(rawdata.toString()) as PolicyViolation[]
+        var obj = JSON.parse(rawdata.toString());
+        const revision = obj['revision'];
+        (0, core_1.info)(`JSON Revision: ` + revision);
+        /*
+        {
+        "revision": "1.0.1",
+        "issues": {
+          "created": "2021-12-03T15:59:37.415205472Z",
+          "issues": [
+            {
+              "checker_id": "disk_encryption_disabled_cloudformation_workspace_volume",
+              "uuid": "045cd711-3a4f-5039-b07e-bc680b0a96ed",
+              "summary": "Disk-level encryption is disabled",
+              "desc": "The Amazon WorkSpace volume does not have encryption enabled, exposing data at rest.\n",
+              "remediation": "Enable volume encryption by explicitly setting the `Properties.UserVolumeEncryptionEnabled` value to `true`.\n",
+              "severity": {
+                "level": "Medium",
+                "impact": "High",
+                "likelihood": "Low"
+              },
+              "taxonomies": {
+                "cwe": [
+                  "313"
+                ]
+              },
+              "filepath": "cft/misc/workspaces-workspace/deploy.json",
+              "language": "JSON",
+              "location": {
+                "start": {
+                  "line": 11,
+                  "column": 43,
+                  "byte": 338
+                },
+                "end": {
+                  "line": 11,
+                  "column": 48,
+                  "byte": 343
+                }
+              },
+              "fixes": [
+                {
+                  "desc": "Enable user volume encryption.",
+                  "actions": [
+                    {
+                      "location": {
+                        "start": {
+                          "line": 11,
+                          "column": 43,
+                          "byte": 338
+                        },
+                        "end": {
+                          "line": 11,
+                          "column": 48,
+                          "byte": 343
+                        }
+                      },
+                      "kind": "Change",
+                      "contents": "true"
+                    }
+                  ]
+                }
+              ],
+              "issue_type": "disk_encryption_disabled_cloudformation_workspace_volume",
+              "tags": [
+                "aws",
+                "cloudformation",
+                "iac",
+                "crypto"
+              ]
+            }
+            */
         /*
         info(`*********** Got JsonParse data`)
         const revision = scanJson.revision
         info('**** created is ****')
         info(`*********** Done with JsonParse data`)
         */
-        const rapidScanReport = yield (0, rapid_scan_1.createReport)(scanJson);
-        if (scanJson.length === 0) {
-            (0, check_1.passSigmaPolicyCheck)(policyCheckId, rapidScanReport);
-        }
-        else {
-            (0, check_1.failSigmaPolicyCheck)(policyCheckId, rapidScanReport);
-        }
+        /*
+          const rapidScanReport = await createReport(scanJson)
+        
+            if (scanJson.length === 0) {
+              passSigmaPolicyCheck(policyCheckId, rapidScanReport)
+            } else {
+              failSigmaPolicyCheck(policyCheckId, rapidScanReport)
+            }
+        
+        */
         // Parse sigma output and comment on PR
         /*
         if (SCAN_MODE === 'RAPID') {
@@ -18539,42 +18612,6 @@ function run() {
 }
 exports.run = run;
 run();
-
-
-/***/ }),
-
-/***/ 890:
-/***/ (function(__unused_webpack_module, exports) {
-
-"use strict";
-
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createReport = void 0;
-function createReport(scanJson) {
-    return __awaiter(this, void 0, void 0, function* () {
-        let message = '';
-        if (scanJson.length == 0) {
-            message = message.concat('# :white_check_mark: None of your dependencies violate policy!');
-        }
-        else {
-            message = message.concat('# :warning: Found dependencies violating policy!\r\n');
-            const policyViolations = scanJson.map(violation => `- [ ] **${violation.componentName} ${violation.versionName}** violates ${violation.violatingPolicyNames.map(policyName => `**${policyName}**`).join(', ')}\r\n_${violation.componentIdentifier}_\r\n`).join('');
-            message = message.concat(policyViolations);
-        }
-        message = message.concat();
-        return message;
-    });
-}
-exports.createReport = createReport;
 
 
 /***/ }),
