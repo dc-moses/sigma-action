@@ -12313,7 +12313,7 @@ function run() {
             (0, core_1.setFailed)(`Could not execute ${sigma_manager_1.TOOL_NAME} ${sigma_manager_1.SIGMA_VERSION}: ${reason}`);
         });
         if (!sigmaExitCode) {
-            (0, core_1.info)(`INFO: !sigmaExitCode, cancelling policy check.`);
+            (0, core_1.info)(`INFO: !sigmaExitCode, cancelling policy check. Code is ` + sigmaExitCode);
             (0, check_1.cancelSigmaPolicyCheck)(policyCheckId);
             return;
         }
