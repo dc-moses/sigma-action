@@ -18522,7 +18522,7 @@ function run() {
             }
             // Loop through findings and leave comments on lines
             for (var j = 0, len2 = obj["issues"]["issues"].length; j < len2; ++j) {
-                var issue = obj["issues"]["issues"][i];
+                var issue = obj["issues"]["issues"][j];
                 (0, core_1.info)(`Create PR comment on uuid=` + issue['uuid'] + " Checker: " + issue['checker_id'] + " Filepath: " + issue['filepath'] + " Line: " + issue['location']['start']['line']);
             }
             /*
