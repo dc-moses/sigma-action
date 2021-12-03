@@ -12298,17 +12298,22 @@ function run() {
             outputPath = path_1.default.resolve(runnerTemp, 'sigma');
         }
         const sigmaArgs = ['analyze', '--format github', '.'];
+        (0, core_1.info)(`INFO: Downloading sigma...`);
         const sigmaPath = yield (0, sigma_manager_1.findOrDownloadSigma)().catch(reason => {
             (0, core_1.setFailed)(`Could not download ${sigma_manager_1.TOOL_NAME} ${sigma_manager_1.SIGMA_VERSION}: ${reason}`);
         });
+        (0, core_1.info)(`INFO: Downloaded sigma`);
         if (!sigmaPath) {
+            (0, core_1.info)(`INFO: Cancelling Sigma policy check`);
             (0, check_1.cancelSigmaPolicyCheck)(policyCheckId);
             return;
         }
         const sigmaExitCode = yield (0, sigma_manager_1.runSigma)(sigmaPath, sigmaArgs).catch(reason => {
+            (0, core_1.info)(`ERROR: Could not execute Sigma!`);
             (0, core_1.setFailed)(`Could not execute ${sigma_manager_1.TOOL_NAME} ${sigma_manager_1.SIGMA_VERSION}: ${reason}`);
         });
         if (!sigmaExitCode) {
+            (0, core_1.info)(`INFO: !sigmaExitCode, cancelling policy check.`);
             (0, check_1.cancelSigmaPolicyCheck)(policyCheckId);
             return;
         }
@@ -12338,6 +12343,7 @@ function run() {
           skipBlackDuckPolicyCheck(policyCheckId)
         }
         */
+        (0, core_1.info)(`INFO: sigmaExitCode = ` + sigmaExitCode);
         if (sigmaExitCode > 0) {
             (0, core_1.setFailed)('Found weaknesses violating policy!');
         }
@@ -12417,7 +12423,7 @@ function findOrDownloadSigma() {
 exports.findOrDownloadSigma = findOrDownloadSigma;
 function runSigma(sigmaPath, detectArguments) {
     return __awaiter(this, void 0, void 0, function* () {
-        (0, core_1.info)(`Will exeute java with ` + sigmaPath);
+        (0, core_1.info)(`Will execute java with ` + sigmaPath);
         return fs.chmod(sigmaPath, 0o555, () => {
             return (0, exec_1.exec)(sigmaPath, ['analyze', '--format', 'github', '.'], { ignoreReturnCode: true });
         });
