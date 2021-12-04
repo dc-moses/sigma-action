@@ -18513,10 +18513,34 @@ function run() {
                 pull_number: contextIssue
             });
             var files_in_pr = [];
+            var files_and_lines_in_pr;
+            // Dict of files to an array of arrays pf of line ranges
             for (var i = 0, len = pull_files["data"].length; i < len; ++i) {
                 (0, core_1.info)(JSON.stringify(pull_files["data"][i], null, 2));
                 (0, core_1.info)("Filename seen in PR: " + pull_files["data"][i]["filename"]);
                 files_in_pr.push(pull_files["data"][i]["filename"]);
+                const regexp = /@@ (.\d+,\d+) (.\d+,\d+) @@/g;
+                const patch = pull_files["data"][i]["patch"];
+                if (patch == undefined) {
+                    continue;
+                }
+                const patch_matches = patch.match(regexp);
+                if (patch_matches == null) {
+                    continue;
+                }
+                for (const pm of patch_matches) {
+                    const re_sub = /(\d+,\d+) @@/g;
+                    var sub_matches = pm.match(re_sub);
+                    if (sub_matches == null) {
+                        continue;
+                    }
+                    var lines = sub_matches[0].slice(0, -3);
+                    if (lines == null) {
+                        continue;
+                    }
+                    var pl = lines.split(',');
+                    (0, core_1.info)("Patch includes " + pull_files["data"][i]["filename"] + " between lines " + pl[0] + " and " + pl[1] + ".");
+                }
             }
             // Loop through findings and leave comments on lines
             for (var j = 0, len2 = obj["issues"]["issues"].length; j < len2; ++j) {
