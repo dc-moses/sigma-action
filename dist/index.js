@@ -18513,7 +18513,7 @@ function run() {
                 pull_number: contextIssue
             });
             var files_in_pr = [];
-            let ChangeMap = new Map();
+            let changeMap = new Map();
             var files_and_lines_in_pr = {};
             // Dict of files to an array of arrays pf of line ranges
             for (var i = 0, len = pull_files["data"].length; i < len; ++i) {
@@ -18529,6 +18529,7 @@ function run() {
                 if (patch_matches == null) {
                     continue;
                 }
+                let changes = [];
                 for (const pm of patch_matches) {
                     const re_sub = /(\d+,\d+) @@/g;
                     var sub_matches = pm.match(re_sub);
@@ -18543,7 +18544,9 @@ function run() {
                     (0, core_1.info)("Patch includes " + pull_files["data"][i]["filename"] + " between lines " + pl[0] + " and " + pl[1] + ".");
                     var begin = parseInt(pl[0]);
                     var end = parseInt(pl[1]);
+                    changes.push({ begin: begin, end: end });
                 }
+                changeMap.set(filename, changes);
             }
             // Loop through findings and leave comments on lines
             for (var j = 0, len2 = obj["issues"]["issues"].length; j < len2; ++j) {
