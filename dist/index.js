@@ -18513,12 +18513,13 @@ function run() {
                 pull_number: contextIssue
             });
             var files_in_pr = [];
-            var files_and_lines_in_pr;
+            let patch_changes = new Map();
+            var files_and_lines_in_pr = {};
             // Dict of files to an array of arrays pf of line ranges
             for (var i = 0, len = pull_files["data"].length; i < len; ++i) {
                 (0, core_1.info)(JSON.stringify(pull_files["data"][i], null, 2));
                 (0, core_1.info)("Filename seen in PR: " + pull_files["data"][i]["filename"]);
-                files_in_pr.push(pull_files["data"][i]["filename"]);
+                var filename = pull_files["data"][i]["filename"];
                 const regexp = /@@ (.\d+,\d+) (.\d+,\d+) @@/g;
                 const patch = pull_files["data"][i]["patch"];
                 if (patch == undefined) {
@@ -18540,6 +18541,8 @@ function run() {
                     }
                     var pl = lines.split(',');
                     (0, core_1.info)("Patch includes " + pull_files["data"][i]["filename"] + " between lines " + pl[0] + " and " + pl[1] + ".");
+                    var begin = parseInt(pl[0]);
+                    var end = parseInt(pl[1]);
                 }
             }
             // Loop through findings and leave comments on lines
