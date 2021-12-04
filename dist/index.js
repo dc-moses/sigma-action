@@ -18607,7 +18607,7 @@ function run() {
                     (0, core_1.info)(JSON.stringify(issue['fixes'], null, 2));
                     var suggestion = undefined;
                     (0, core_1.info)("1");
-                    if (issue['fixes']) {
+                    if (issue['fixes'] && issue['fixes']['actions'] != undefined) {
                         // TODO What about more fixes?
                         var fix_location_start_line = issue['fixes']['actions'][0]['location']['start']['line'];
                         var fix_location_start_col = issue['fixes']['actions'][0]['location']['start']['column'];
