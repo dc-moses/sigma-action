@@ -18551,6 +18551,7 @@ function run() {
             // Loop through findings and leave comments on lines
             for (var j = 0, len2 = obj["issues"]["issues"].length; j < len2; ++j) {
                 var issue = obj["issues"]["issues"][j];
+                let changes = changeMap.get(issue['filepath']);
                 if (true) {
                     (0, core_1.info)(`Create PR comment on uuid=` + issue['uuid'] + " Checker: " + issue['checker_id'] + " Filepath: " + issue['filepath'] + " Line: " + issue['location']['start']['line']);
                     const sha = (0, github_context_1.getSha)();
