@@ -14414,6 +14414,46 @@ exports.FetchError = FetchError;
 
 /***/ }),
 
+/***/ 3128:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+var readline = __nccwpck_require__(4521),
+  fs = __nccwpck_require__(7147)
+
+var outOfRangeError = function(filepath, n) {
+  return new RangeError(
+    `Line with index ${n} does not exist in '${filepath}. Note that line indexing is zero-based'`
+  )
+}
+
+module.exports = function(n, filepath) {
+  return new Promise(function(resolve, reject) {
+    if (n < 0 || n % 1 !== 0)
+      return reject(new RangeError(`Invalid line number`))
+
+    var cursor = 0,
+      input = fs.createReadStream(filepath),
+      rl = readline.createInterface({ input })
+
+    rl.on('line', function(line) {
+      if (cursor++ === n) {
+        rl.close()
+        input.close()
+        resolve(line)
+      }
+    })
+
+    rl.on('error', reject)
+
+    input.on('end', function() {
+      reject(outOfRangeError(filepath, n))
+    })
+  })
+}
+
+
+/***/ }),
+
 /***/ 8666:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
@@ -18564,6 +18604,14 @@ function run() {
                 }
                 if (validated_location) {
                     (0, core_1.info)(`Create PR comment on uuid=` + issue['uuid'] + " Checker: " + issue['checker_id'] + " Filepath: " + issue['filepath'] + " Line: " + issue['location']['start']['line']);
+                    if (issue['fixes']) {
+                        var fix_location_start_line = issue['fixes']['actions']['location']['start']['line'];
+                        var fix_location_start_col = issue['fixes']['actions']['location']['start']['column'];
+                        (0, core_1.info)("Fix included, start line = " + fix_location_start_line + " and col = " + fix_location_start_col);
+                        const nthline = __nccwpck_require__(3128), filePath = issue['filepath'], rowIndex = fix_location_start_line;
+                        var current_line = yield nthline(rowIndex, filePath);
+                        (0, core_1.info)("Current line is '" + current_line + "'");
+                    }
                     const sha = (0, github_context_1.getSha)();
                     var comment = yield octokit.rest.pulls.createReviewComment({
                         owner: contextOwner,
@@ -18999,6 +19047,14 @@ module.exports = require("perf_hooks");
 
 "use strict";
 module.exports = require("punycode");
+
+/***/ }),
+
+/***/ 4521:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("readline");
 
 /***/ }),
 
