@@ -18606,8 +18606,9 @@ function run() {
                     (0, core_1.info)(`Create PR comment on uuid=` + issue['uuid'] + " Checker: " + issue['checker_id'] + " Filepath: " + issue['filepath'] + " Line: " + issue['location']['start']['line']);
                     (0, core_1.info)(JSON.stringify(issue['fixes'], null, 2));
                     if (issue['fixes']) {
-                        var fix_location_start_line = issue['fixes']['actions']['location']['start']['line'];
-                        var fix_location_start_col = issue['fixes']['actions']['location']['start']['column'];
+                        // TODO What about more fixes?
+                        var fix_location_start_line = issue['fixes'][0]['location']['start']['line'];
+                        var fix_location_start_col = issue['fixes'][0]['location']['start']['column'];
                         (0, core_1.info)("Fix included, start line = " + fix_location_start_line + " and col = " + fix_location_start_col);
                         const nthline = __nccwpck_require__(3128), filePath = issue['filepath'], rowIndex = fix_location_start_line;
                         var current_line = yield nthline(rowIndex, filePath);
