@@ -18616,7 +18616,7 @@ function run() {
                         (0, core_1.info)("2");
                         (0, core_1.info)("Fix included, start line = " + fix_location_start_line + " and col = " + fix_location_start_col);
                         (0, core_1.info)("3");
-                        const nthline = __nccwpck_require__(3128), filePath = issue['filepath'], rowIndex = fix_location_start_line;
+                        const nthline = __nccwpck_require__(3128), filePath = issue['filepath'], rowIndex = fix_location_start_line - 1;
                         var current_line = yield nthline(rowIndex, filePath);
                         (0, core_1.info)("4");
                         (0, core_1.info)("Current line is '" + current_line + "'");
