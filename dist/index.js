@@ -18570,7 +18570,7 @@ function run() {
                         repo: contextRepo,
                         pull_number: contextIssue,
                         path: issue['filepath'],
-                        body: "Sigma finding: " + issue['summary'],
+                        body: "Sigma finding: " + issue['summary'] + "\n" + issue['desc'],
                         line: issue['location']['start']['line'],
                         commit_id: sha,
                         position: 1
