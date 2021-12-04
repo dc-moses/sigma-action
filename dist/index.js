@@ -18621,7 +18621,7 @@ function run() {
                         (0, core_1.info)("4");
                         (0, core_1.info)("Current line is '" + current_line + "'");
                         (0, core_1.info)("5");
-                        suggestion = current_line.substring(0, fix_location_start_col) + issue['fixes'][0]['actions'][0]['contents'] + current_line.substring(fix_location_end_col, current_line.length);
+                        suggestion = current_line.substring(0, fix_location_start_col - 1) + issue['fixes'][0]['actions'][0]['contents'] + current_line.substring(fix_location_end_col - 1, current_line.length);
                         var body = "Sigma finding: " + issue['summary'] + "\n" + issue['desc'];
                         (0, core_1.info)("3");
                         if (suggestion != undefined) {
