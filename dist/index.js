@@ -18552,11 +18552,17 @@ function run() {
             for (var j = 0, len2 = obj["issues"]["issues"].length; j < len2; ++j) {
                 var issue = obj["issues"]["issues"][j];
                 let changes = changeMap.get(issue['filepath']);
+                var validated_location = false;
                 if (changes) {
                     (0, core_1.info)("Found change record for " + issue['filepath']);
-                    (0, core_1.info)("Begin=" + changes[0].begin + " End=" + changes[0].end);
+                    for (const change of changes) {
+                        (0, core_1.info)("Begin=" + change.begin + " End=" + change.end);
+                        if (parseInt(issue['location']['start']['line']) <= change.end && parseInt(issue['location']['start']['line']) >= change.begin) {
+                            validated_location = true;
+                        }
+                    }
                 }
-                if (true) {
+                if (validated_location) {
                     (0, core_1.info)(`Create PR comment on uuid=` + issue['uuid'] + " Checker: " + issue['checker_id'] + " Filepath: " + issue['filepath'] + " Line: " + issue['location']['start']['line']);
                     const sha = (0, github_context_1.getSha)();
                     var comment = yield octokit.rest.pulls.createReviewComment({
