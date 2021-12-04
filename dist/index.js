@@ -18605,14 +18605,21 @@ function run() {
                 if (validated_location) {
                     (0, core_1.info)(`Create PR comment on uuid=` + issue['uuid'] + " Checker: " + issue['checker_id'] + " Filepath: " + issue['filepath'] + " Line: " + issue['location']['start']['line']);
                     (0, core_1.info)(JSON.stringify(issue['fixes'], null, 2));
+                    var suggestion = undefined;
                     if (issue['fixes']) {
                         // TODO What about more fixes?
-                        var fix_location_start_line = issue['fixes'][0]['location']['start']['line'];
-                        var fix_location_start_col = issue['fixes'][0]['location']['start']['column'];
+                        var fix_location_start_line = issue['fixes']['actions'][0]['location']['start']['line'];
+                        var fix_location_start_col = issue['fixes']['actions'][0]['location']['start']['column'];
+                        var fix_location_end_col = issue['fixes']['actions'][0]['location']['end']['column'];
                         (0, core_1.info)("Fix included, start line = " + fix_location_start_line + " and col = " + fix_location_start_col);
                         const nthline = __nccwpck_require__(3128), filePath = issue['filepath'], rowIndex = fix_location_start_line;
                         var current_line = yield nthline(rowIndex, filePath);
                         (0, core_1.info)("Current line is '" + current_line + "'");
+                        suggestion = current_line.substring(0, fix_location_start_col) + issue['fixes']['actions'][0]['contents'] + current_line.substring(fix_location_end_col, current_line.length);
+                    }
+                    var body = "Sigma finding: " + issue['summary'] + "\n" + issue['desc'];
+                    if (suggestion != undefined) {
+                        body = body + "\n```suggestion\n" + suggestion + "\n```\n";
                     }
                     const sha = (0, github_context_1.getSha)();
                     var comment = yield octokit.rest.pulls.createReviewComment({
@@ -18620,7 +18627,7 @@ function run() {
                         repo: contextRepo,
                         pull_number: contextIssue,
                         path: issue['filepath'],
-                        body: "Sigma finding: " + issue['summary'] + "\n" + issue['desc'],
+                        body: body,
                         line: issue['location']['start']['line'],
                         commit_id: sha,
                         position: 1
