@@ -18607,11 +18607,12 @@ function run() {
                     (0, core_1.info)(JSON.stringify(issue['fixes'], null, 2));
                     var suggestion = undefined;
                     (0, core_1.info)("1");
-                    if (issue['fixes'] && issue['fixes']['actions'] != undefined) {
+                    (0, core_1.info)(JSON.stringify(issue['fixes'], null, 2));
+                    if (issue['fixes'][0]) {
                         // TODO What about more fixes?
-                        var fix_location_start_line = issue['fixes']['actions'][0]['location']['start']['line'];
-                        var fix_location_start_col = issue['fixes']['actions'][0]['location']['start']['column'];
-                        var fix_location_end_col = issue['fixes']['actions'][0]['location']['end']['column'];
+                        var fix_location_start_line = issue['fixes'][0]['actions'][0]['location']['start']['line'];
+                        var fix_location_start_col = issue['fixes'][0]['actions'][0]['location']['start']['column'];
+                        var fix_location_end_col = issue['fixes'][0]['actions'][0]['location']['end']['column'];
                         (0, core_1.info)("2");
                         (0, core_1.info)("Fix included, start line = " + fix_location_start_line + " and col = " + fix_location_start_col);
                         (0, core_1.info)("3");
