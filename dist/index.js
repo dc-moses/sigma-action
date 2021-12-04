@@ -18606,17 +18606,23 @@ function run() {
                     (0, core_1.info)(`Create PR comment on uuid=` + issue['uuid'] + " Checker: " + issue['checker_id'] + " Filepath: " + issue['filepath'] + " Line: " + issue['location']['start']['line']);
                     (0, core_1.info)(JSON.stringify(issue['fixes'], null, 2));
                     var suggestion = undefined;
+                    (0, core_1.info)("1");
                     if (issue['fixes']) {
                         // TODO What about more fixes?
                         var fix_location_start_line = issue['fixes']['actions'][0]['location']['start']['line'];
                         var fix_location_start_col = issue['fixes']['actions'][0]['location']['start']['column'];
                         var fix_location_end_col = issue['fixes']['actions'][0]['location']['end']['column'];
+                        (0, core_1.info)("2");
                         (0, core_1.info)("Fix included, start line = " + fix_location_start_line + " and col = " + fix_location_start_col);
+                        (0, core_1.info)("3");
                         const nthline = __nccwpck_require__(3128), filePath = issue['filepath'], rowIndex = fix_location_start_line;
                         var current_line = yield nthline(rowIndex, filePath);
+                        (0, core_1.info)("4");
                         (0, core_1.info)("Current line is '" + current_line + "'");
+                        (0, core_1.info)("5");
                         suggestion = current_line.substring(0, fix_location_start_col) + issue['fixes']['actions'][0]['contents'] + current_line.substring(fix_location_end_col, current_line.length);
                         var body = "Sigma finding: " + issue['summary'] + "\n" + issue['desc'];
+                        (0, core_1.info)("3");
                         if (suggestion != undefined) {
                             body = body + "\n```suggestion\n" + suggestion + "\n```\n";
                         }
