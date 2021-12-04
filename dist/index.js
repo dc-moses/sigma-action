@@ -18616,23 +18616,23 @@ function run() {
                         var current_line = yield nthline(rowIndex, filePath);
                         (0, core_1.info)("Current line is '" + current_line + "'");
                         suggestion = current_line.substring(0, fix_location_start_col) + issue['fixes']['actions'][0]['contents'] + current_line.substring(fix_location_end_col, current_line.length);
+                        var body = "Sigma finding: " + issue['summary'] + "\n" + issue['desc'];
+                        if (suggestion != undefined) {
+                            body = body + "\n```suggestion\n" + suggestion + "\n```\n";
+                        }
+                        const sha = (0, github_context_1.getSha)();
+                        var comment = yield octokit.rest.pulls.createReviewComment({
+                            owner: contextOwner,
+                            repo: contextRepo,
+                            pull_number: contextIssue,
+                            path: issue['filepath'],
+                            body: body,
+                            line: issue['location']['start']['line'],
+                            commit_id: sha,
+                            position: 1
+                        });
+                        (0, core_1.info)(JSON.stringify(comment, null, 2));
                     }
-                    var body = "Sigma finding: " + issue['summary'] + "\n" + issue['desc'];
-                    if (suggestion != undefined) {
-                        body = body + "\n```suggestion\n" + suggestion + "\n```\n";
-                    }
-                    const sha = (0, github_context_1.getSha)();
-                    var comment = yield octokit.rest.pulls.createReviewComment({
-                        owner: contextOwner,
-                        repo: contextRepo,
-                        pull_number: contextIssue,
-                        path: issue['filepath'],
-                        body: body,
-                        line: issue['location']['start']['line'],
-                        commit_id: sha,
-                        position: 1
-                    });
-                    (0, core_1.info)(JSON.stringify(comment, null, 2));
                 }
             }
             /*
