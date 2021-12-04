@@ -18554,6 +18554,7 @@ function run() {
                 let changes = changeMap.get(issue['filepath']);
                 if (changes) {
                     (0, core_1.info)("Found change record for " + issue['filepath']);
+                    (0, core_1.info)("Begin=" + changes[0].begin + " End=" + changes[0].end);
                 }
                 if (true) {
                     (0, core_1.info)(`Create PR comment on uuid=` + issue['uuid'] + " Checker: " + issue['checker_id'] + " Filepath: " + issue['filepath'] + " Line: " + issue['location']['start']['line']);
