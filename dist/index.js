@@ -18604,6 +18604,7 @@ function run() {
                 }
                 if (validated_location) {
                     (0, core_1.info)(`Create PR comment on uuid=` + issue['uuid'] + " Checker: " + issue['checker_id'] + " Filepath: " + issue['filepath'] + " Line: " + issue['location']['start']['line']);
+                    (0, core_1.info)(JSON.stringify(issue['fixes'], null, 2));
                     if (issue['fixes']) {
                         var fix_location_start_line = issue['fixes']['actions']['location']['start']['line'];
                         var fix_location_start_col = issue['fixes']['actions']['location']['start']['column'];
