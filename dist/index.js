@@ -18513,7 +18513,7 @@ function run() {
                 pull_number: contextIssue
             });
             var files_in_pr = [];
-            let patch_changes = new Map();
+            let ChangeMap = new Map();
             var files_and_lines_in_pr = {};
             // Dict of files to an array of arrays pf of line ranges
             for (var i = 0, len = pull_files["data"].length; i < len; ++i) {
